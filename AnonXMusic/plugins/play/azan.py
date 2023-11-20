@@ -103,4 +103,5 @@ async def azan_scheduler():
                 await play_azan(chat_id)
             await asyncio.sleep(177)
         await asyncio.sleep(2)
+        
   asyncio.create_task(azan_scheduler())
