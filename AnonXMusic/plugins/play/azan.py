@@ -42,7 +42,7 @@ async def stop_azan():
 
 async def play_azan(chat_id):
     assistant = await group_assistant(Anony, chat_id)
-    azan_audio_path = "./AnonXMusic/assets/azan.mp3"
+    azan_audio_path = "./assets/azan.mp3"
     stream = AudioPiped(azan_audio_path)
     try:
         await assistant.join_group_call(
