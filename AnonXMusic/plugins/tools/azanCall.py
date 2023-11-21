@@ -127,7 +127,6 @@ async def adhan():
     while True:
         current_time = datetime.now(_timezone).strftime("%H:%M")
         prayers_time = prayers()
-        current_time = "05:14"
         if current_time in list(prayers_time.values()):
             pname = pnames[
                 list(prayers_time.items())[list(prayers_time.values()).index(current_time)][0]
