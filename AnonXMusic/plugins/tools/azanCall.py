@@ -135,7 +135,7 @@ async def adhan():
         else:
             await sleep(5)
             continue
-        await call_stop()
+        await calls_stop()
         enabled = list(read("azan", "chat_id"))
         for chat_id in enabled:
             await app.send_message(chat_id[0], f"حان الآن وقت أذان {pname} ❤️\nجارٍ تشغيل الأذان...")
