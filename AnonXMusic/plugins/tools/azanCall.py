@@ -16,30 +16,32 @@ from AnonXMusic.core.mongo import mongodb
 
 db = mongodb["azan"]
 
-def add_chat_id_and_timezone(chat_id, timezone):
+async def add_chat_id_and_timezone(chat_id, timezone):
     document = {"chat_id": chat_id, "timezone": timezone}
-    db.insert_one(document)
+    await db.insert_one(document)
 
-def delete_chat_id_and_timezone(chat_id):
+async def delete_chat_id_and_timezone(chat_id):
     query = {"chat_id": chat_id}
-    db.delete_one(query)
+    await db.delete_one(query)
 
-def is_chat_id_exists(chat_id):
+async def is_chat_id_exists(chat_id):
     query = {"chat_id": chat_id}
-    return db.count_documents(query) > 0
+    return await db.count_documents(query) > 0
 
-def get_timezone_for_chat_id(chat_id):
+async def get_timezone_for_chat_id(chat_id):
     query = {"chat_id": chat_id}
-    document = db.find_one(query)
+    document = await db.find_one(query)
     return document["timezone"]
 
 
-add_chat_id_and_timezone(-1001820369606, "Africa/Cairo")
-print(is_chat_id_exists(-1001820369606))
-print(get_timezone_for_chat_id(-1001820369606)) # "Africa/Cairo"
-delete_chat_id_and_timezone(-1001820369606)
-print(is_chat_id_exists(-1001820369606)) # False
+async test():
+    await add_chat_id_and_timezone(-1001820369606, "Africa/Cairo")
+    print(await is_chat_id_exists(-1001820369606))
+    print(await get_timezone_for_chat_id(-1001820369606)) # "Africa/Cairo"
+    await delete_chat_id_and_timezone(-1001820369606)
+    print(await is_chat_id_exists(-1001820369606)) # False
 
+create_task(test)
 
 # Change it to what you want
 _timezone = timezone('Asia/Baghdad')
