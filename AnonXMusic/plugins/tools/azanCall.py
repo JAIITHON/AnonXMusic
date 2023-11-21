@@ -41,7 +41,7 @@ async def test():
     await delete_chat_id_and_timezone(-1001820369606)
     print(await is_chat_id_exists(-1001820369606)) # False
 
-create_task(test)
+create_task(test())
 
 # Change it to what you want
 _timezone = timezone('Asia/Baghdad')
