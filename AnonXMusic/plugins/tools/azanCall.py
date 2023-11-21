@@ -75,7 +75,7 @@ async def calls_stop():
 
 async def play(chat_id):
     assistant = await group_assistant(Anony, chat_id)
-    audio = "./AnonXMusic/assets/azan.mp3"
+    audio = "./AnonXMusic/assets/azan.m4a"
     stream = AudioPiped(audio)
     try:await assistant.join_group_call(
             chat_id,
