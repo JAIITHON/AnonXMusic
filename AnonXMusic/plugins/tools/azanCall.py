@@ -51,7 +51,6 @@ async def get_all():
 @app.on_message(filters.command("تفعيل الاذان", "") & ~filters.private)
 async def adhanActivition(_: Client, message: Message):
     chat_id = message.chat.id
-    data = list(read("azan", "chat_id"))
     if not exists(chat_id):
         await add(chat_id, "Africa/Cairo")
         create_task(adhan(chat_id, "Africa/Cairo"))
