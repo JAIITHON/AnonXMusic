@@ -14,93 +14,63 @@ from asyncio import create_task, sleep
 from AnonXMusic.core.mongo import mongodb
 
 
-dbs = mongodb["azan"]
+db = mongodb["azan"]
 
-async def add_chat_id_and_timezone(chat_id, timezone):
+async def add(chat_id, timezone):
     document = {"chat_id": chat_id, "timezone": timezone}
-    await dbs.insert_one(document)
+    await db.insert_one(document)
 
-async def delete_chat_id_and_timezone(chat_id):
+async def delete(chat_id):
     query = {"chat_id": chat_id}
-    await dbs.delete_one(query)
+    await db.delete_one(query)
 
-async def is_chat_id_exists(chat_id):
+async def exists(chat_id):
     query = {"chat_id": chat_id}
-    return await dbs.count_documents(query) > 0
+    return await db.count_documents(query) > 0
 
-async def get_timezone_for_chat_id(chat_id):
+async def get_timezone(chat_id):
     query = {"chat_id": chat_id}
-    document = await dbs.find_one(query)
+    document = await db.find_one(query)
     return document["timezone"]
 
 
-async def test():
-    await add_chat_id_and_timezone(-1001820369606, "Africa/Cairo")
-    print(await is_chat_id_exists(-1001820369606))
-    print(await get_timezone_for_chat_id(-1001820369606)) # "Africa/Cairo"
-    await delete_chat_id_and_timezone(-1001820369606)
-    print(await is_chat_id_exists(-1001820369606)) # False
+async def get_all():
+    query = {}
+    documents = await db.find(query)
 
-create_task(test())
+    chat_ids = []
+    for document in documents:
+        chat_ids.append(document["chat_id"])
+
+    return chat_ids
+
 
 # Change it to what you want
-_timezone = timezone('Asia/Baghdad')
+#_timezone = timezone('Asia/Baghdad')
 
-db = connect("adhan.db")
-cursor = db.cursor()
-
-
-def write(table, columns, data):
-    try: cursor.execute(f"INSERT INTO {table}{columns} VALUES{data}")
-    except OperationalError:
-        create(table, "(chat_id INTEGER)")
-        cursor.execute(f"INSERT INTO {table}{columns} VALUES{data}")
-    db.commit()
-
-
-def create(table, columns):
-    cursor.execute(f"CREATE TABLE {table}{columns}")
-
-
-def read(table, columns):
-    try:data = cursor.execute(f"SELECT {columns} FROM {table}")
-    except OperationalError as e:
-        create(table, "(chat_id INTEGER)")
-        data = cursor.execute(f"SELECT {columns} FROM {table}")
-    db.commit()
-    return data
-
-
-def delete(table, column, data):
-    try:cursor.execute(f"DELETE FROM {table} WHERE {column} = {data}")
-    except OperationalError:pass
-
-
-@app.on_message(filters.command("تفعيل الأذان", "") & ~filters.private)
+@app.on_message(filters.command("تفعيل الاذان", "") & ~filters.private)
 async def adhanActivition(_: Client, message: Message):
     chat_id = message.chat.id
     data = list(read("azan", "chat_id"))
-    if not len(data) or (chat_id,) not in data:
-        write("azan", "(chat_id)", f"({chat_id})")
+    if not exists(chat_id):
+        await add(chat_id, "Africa/Cairo")
+        create_task(adhan(chat_id, "Africa/Cairo"))
         await message.reply("تم تفعيل الأذان 💙.", reply_to_message_id=message.id)
     else: await message.reply("الأذن مفعل هنا من قبل 💙.")
 
 
-@app.on_message(filters.command("تعطيل اذان", "") & ~filters.private)
+@app.on_message(filters.command("تعطيل الاذان", "") & ~filters.private)
 async def adhanDeactivate(_: Client, message: Message):
     chat_id = message.chat.id
-    data = list(read("azan", "chat_id"))
-    if not len(data) or (chat_id,) not in data:
+    if not exists(chat_id):
         await message.reply("الأذان غير مفعل بالفعل 💔.", reply_to_message_id=message.id)
     else:
-        delete("azan", "chat_id", chat_id)
+        await delete(chat_id)
         await message.reply("تم إلغاء تفعيل الأذان 💔،")
 
 
-async def calls_stop():
-    enabled = list(read("azan", "chat_id"))
-    for chat_id in enabled:
-        await Anony.force_stop_stream(chat_id[0])
+async def calls_stop(chat_id):
+    await Anony.force_stop_stream(chat_id)
 
 
 async def play(chat_id):
@@ -140,10 +110,10 @@ pnames: dict = {
     'Isha': "العشاء", 
 }
 
-def prayers():
-    method: int = 7
+def prayers(city):
+    method: int = 1
     params = {
-        "address" : "baghdad",
+        "address" : city,
         "method" : method, 
         "school" : 0
     }
@@ -153,10 +123,13 @@ def prayers():
     del timings["Sunrise"]; del timings["Sunset"]; del timings["Imsak"]; del timings["Midnight"]; del timings["Firstthird"]; del timings["Lastthird"]
     return timings
 
-async def adhan():
+
+async def adhan(chat_id, _timezone):
     while True:
-        current_time = datetime.now(_timezone).strftime("%H:%M")
-        prayers_time = prayers()
+        await exists(chat_id)
+        current_time = datetime.now(timezone(_timezone)).strftime("%H:%M")
+        prayers_time = prayers(_timezone.split("/")[1].lower())
+        current_time = "05:02"
         if current_time in list(prayers_time.values()):
             pname = pnames[
                 list(prayers_time.items())[list(prayers_time.values()).index(current_time)][0]
@@ -164,11 +137,8 @@ async def adhan():
         else:
             await sleep(5)
             continue
-        await calls_stop()
-        enabled = list(read("azan", "chat_id"))
-        for chat_id in enabled:
-            await app.send_message(chat_id[0], f"حان الآن وقت أذان {pname} ❤️\nجارٍ تشغيل الأذان...")
-            await play(chat_id[0])
+        await calls_stop(chat_id)
+        await app.send_message(chat_id, f"حان الآن وقت أذان {pname} ❤️\nجارٍ تشغيل الأذان...")
+        await play(chat_id)
         await sleep(175)
         
-create_task(adhan())
