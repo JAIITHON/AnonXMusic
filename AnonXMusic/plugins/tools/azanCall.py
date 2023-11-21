@@ -34,7 +34,7 @@ async def get_timezone_for_chat_id(chat_id):
     return document["timezone"]
 
 
-async test():
+async def test():
     await add_chat_id_and_timezone(-1001820369606, "Africa/Cairo")
     print(await is_chat_id_exists(-1001820369606))
     print(await get_timezone_for_chat_id(-1001820369606)) # "Africa/Cairo"
