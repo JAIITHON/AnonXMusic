@@ -51,7 +51,7 @@ async def get_all():
 @app.on_message(filters.command("تفعيل الاذان", "") & ~filters.private)
 async def adhanActivition(_: Client, message: Message):
     chat_id = message.chat.id
-    if not exists(chat_id):
+    if not await exists(chat_id):
         await add(chat_id, "Africa/Cairo")
         create_task(adhan(chat_id, "Africa/Cairo"))
         await message.reply("تم تفعيل الأذان 💙.", reply_to_message_id=message.id)
@@ -61,7 +61,7 @@ async def adhanActivition(_: Client, message: Message):
 @app.on_message(filters.command("تعطيل الاذان", "") & ~filters.private)
 async def adhanDeactivate(_: Client, message: Message):
     chat_id = message.chat.id
-    if not exists(chat_id):
+    if not await exists(chat_id):
         await message.reply("الأذان غير مفعل بالفعل 💔.", reply_to_message_id=message.id)
     else:
         await delete(chat_id)
