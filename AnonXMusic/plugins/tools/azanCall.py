@@ -14,23 +14,23 @@ from asyncio import create_task, sleep
 from AnonXMusic.core.mongo import mongodb
 
 
-db = mongodb["azan"]
+dbs = mongodb["azan"]
 
 async def add_chat_id_and_timezone(chat_id, timezone):
     document = {"chat_id": chat_id, "timezone": timezone}
-    await db.insert_one(document)
+    await dbs.insert_one(document)
 
 async def delete_chat_id_and_timezone(chat_id):
     query = {"chat_id": chat_id}
-    await db.delete_one(query)
+    await dbs.delete_one(query)
 
 async def is_chat_id_exists(chat_id):
     query = {"chat_id": chat_id}
-    return await db.count_documents(query) > 0
+    return await dbs.count_documents(query) > 0
 
 async def get_timezone_for_chat_id(chat_id):
     query = {"chat_id": chat_id}
-    document = await db.find_one(query)
+    document = await dbs.find_one(query)
     return document["timezone"]
 
 
