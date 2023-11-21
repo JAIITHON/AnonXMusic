@@ -3,7 +3,6 @@ from pyrogram.types import Message
 from AnonXMusic import app
 from datetime import datetime
 import requests
-from strings.filters import command
 from pytz import timezone
 from AnonXMusic.core.call import Anony
 from pytgcalls import PyTgCalls, StreamType
