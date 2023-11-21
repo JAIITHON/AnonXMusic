@@ -46,7 +46,7 @@ def delete(table, column, data):
     except OperationalError:pass
 
 
-@app.on_message(command(["تفعيل اذان"]) & ~filters.private)
+@app.on_message(filters.command("تفعيل الأذان", "") & ~filters.private)
 async def adhanActivition(_: Client, message: Message):
     chat_id = message.chat.id
     data = list(read("azan", "chat_id"))
@@ -56,7 +56,7 @@ async def adhanActivition(_: Client, message: Message):
     else: await message.reply("الأذن مفعل هنا من قبل 💙.")
 
 
-@app.on_message(command(["تعطيل اذان"]) & ~filters.private)
+@app.on_message(filters.command("تعطيل اذان", "") & ~filters.private)
 async def adhanDeactivate(_: Client, message: Message):
     chat_id = message.chat.id
     data = list(read("azan", "chat_id"))
