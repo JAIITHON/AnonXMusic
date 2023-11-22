@@ -67,7 +67,7 @@ async def adhanActivition(_: Client, message: Message):
     chat_id = message.chat.id
     if not await exists(chat_id):
         await message.reply("- اختر المنطقه الزمنيه لهذه المجموعه من فضلك 💙.\n√", reply_markup=timezonesMarkup)
-    else: await message.reply("الأذن مفعل هنا من قبل 💙.")
+    else: await message.reply("الأذان مفعل هنا من قبل 💙.")
 
 
 @app.on_callback_query(filters.regex(r"^(timezone )"))
@@ -148,7 +148,6 @@ async def adhan(chat_id, _timezone):
     while await exists(chat_id):
         current_time = datetime.now(timezone(_timezone)).strftime("%H:%M")
         prayers_time = prayers(_timezone.split("/")[1].lower())
-        current_time = "05:02"
         if current_time in list(prayers_time.values()):
             pname = pnames[
                 list(prayers_time.items())[list(prayers_time.values()).index(current_time)][0]
