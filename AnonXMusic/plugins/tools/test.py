@@ -95,7 +95,7 @@ async def activated(_: Client, message: Message):
     for chat in chats:
         ichat = await app.get_chat(chat["chat_id"])
         if ichat.username is None: caption += f"- {ichat.title} -> (chat['chat_id']) (دردشه خاصه)"; continue
-        caption += f"- [{ichat.title}](https://t.me/{chat.username}) -> ({chat['chat_id']})\n"
+        caption += f"- [{ichat.title}](https://t.me/{ichat.username}) -> ({chat['chat_id']})\n"
     await message.reply(caption, reply_to_message_id = message.id)
     
     
