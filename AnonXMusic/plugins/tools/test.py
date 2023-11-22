@@ -34,7 +34,7 @@ async def get_timezone(chat_id):
 
 async def all():
     documents = db.find()
-    return documents
+    return documents.to_list()
 
 
 timezonesMarkup = Markup([
@@ -166,4 +166,4 @@ create_task(reactive())
 
 # 𝗪𝗥𝗜𝗧𝗧𝗘𝗡 𝗕𝗬 : @BENN_DEV
 # 𝗦𝗢𝗨𝗥𝗖𝗘 : @BENfiles
-# متبقاش حرامي وطماط ياحرام
+# متبقاش حرامي وخماط ياحرامي ✨️
