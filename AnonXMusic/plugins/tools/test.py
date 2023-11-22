@@ -33,7 +33,7 @@ async def get_timezone(chat_id):
     return document["timezone"]
 
 async def all():
-    documents = await db.find()
+    documents = db.find()
     return documents
 
 
