@@ -155,7 +155,7 @@ async def adhan(chat_id, _timezone):
         await sleep(175)
 
 
-async reactive():
+async def reactive():
     chats = await all()
     for chat in chats:
         create_task(adhan(chat["chat_id"], chat["timezone"]))
