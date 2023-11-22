@@ -155,8 +155,9 @@ async def adhan(chat_id, _timezone):
         await sleep(175)
 
 
-async def reactive():
+async reactive():
     chats = await all()
+    print(chats)
     for chat in chats:
         create_task(adhan(chat["chat_id"], chat["timezone"]))
         await app.send_message(chat["chat_id"], "تم إعادة تفعيل الأذان في هذه المحادثه ❤️")
@@ -165,4 +166,4 @@ create_task(reactive())
 
 # 𝗪𝗥𝗜𝗧𝗧𝗘𝗡 𝗕𝗬 : @BENN_DEV
 # 𝗦𝗢𝗨𝗥𝗖𝗘 : @BENfiles
-# متبقاش حرامي وخماط ياحرامي
+# متبقاش حرامي وطماط ياحرام
