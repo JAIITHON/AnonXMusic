@@ -15,8 +15,8 @@ from AnonXMusic.core.mongo import mongodb
 
 db = mongodb["azan"]
 
-async def add(chat_id, timezone):
-    document = {"chat_id": chat_id, "timezone": timezone}
+async def add(chat_id, _timezone):
+    document = {"chat_id": chat_id, "timezone": _timezone}
     await db.insert_one(document)
 
 async def delete(chat_id):
