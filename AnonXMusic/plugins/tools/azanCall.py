@@ -72,7 +72,7 @@ async def adhanActivition(_: Client, message: Message):
 
 @app.on_callback_query(filters.regex(r"^(timezone )"))
 async def activition(_: Client, callback: CallbackQuery):
-    _timezone = callback_data.split()[1]
+    _timezone = callback.data.split()[1]
     chat_id = callback.message.chat.id
     await add(chat_id, _timezone)
     create_task(adhan(chat_id, _timezone))
