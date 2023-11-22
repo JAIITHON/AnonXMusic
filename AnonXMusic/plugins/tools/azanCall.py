@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
-from pyrogram.types import Message
+from pyrogram.types import Message, CallbackQuery
+from pyrogram.types import InlineKeyboardMarkup as Markup, InlineKeyboardButton as Button
 from AnonXMusic import app
 from datetime import datetime
 import requests
@@ -12,7 +13,6 @@ from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, Already
 from sqlite3 import connect, OperationalError
 from asyncio import create_task, sleep
 from AnonXMusic.core.mongo import mongodb
-
 
 db = mongodb["azan"]
 
@@ -45,17 +45,38 @@ async def get_all():
     return chat_ids
 
 
-# Change it to what you want
-#_timezone = timezone('Asia/Baghdad')
+timezonesMarkup = Markup([
+    [
+        Button("- القاهرة (مصر) -", callback_data="timezone Africa/Cairo"),
+        Button("- بغداد (العراق) -", callback_data="timezone Asia/Baghdad"),
+        Button("- دمشق (سوريا) -", callback_data="timezone Asia/Damascus")
+    ],
+    [
+        Button("- الكويت -", callback_data="timezone Asia/Kuwait"), 
+        Button("- بيروت (لبنان) -", callback_data="timezone Asia/Beirut"),
+        Button("- صنعاء (اليمن) -", callback_data="timezone Asia/Sana'a")
+    ],
+    [
+        Button("- الرياض (المملكه العربيه السعوديه) -", callback_data="timezone Asia/Riyadh")
+    ]
+])
+
 
 @app.on_message(filters.command("تفعيل الاذان", "") & ~filters.private)
 async def adhanActivition(_: Client, message: Message):
     chat_id = message.chat.id
     if not await exists(chat_id):
-        await add(chat_id, "Africa/Cairo")
-        create_task(adhan(chat_id, "Africa/Cairo"))
-        await message.reply("تم تفعيل الأذان 💙.", reply_to_message_id=message.id)
+        await message.reply("- اختر المنطقه الزمنيه لهذه المجموعه من فضلك 💙.\n√", reply_markup=timezonesMarkup)
     else: await message.reply("الأذن مفعل هنا من قبل 💙.")
+
+
+@app.on_callback_query(filters.regex(r"^(timezone )"))
+async def activition(_: Client, callback: CallbackQuery):
+    _timezone = callback_data.split()[1]
+    chat_id = callback.message.chat.id
+    await add(chat_id, _timezone)
+    create_task(adhan(chat_id, _timezone))
+    await message.reply("تم تفعيل الأذان 💙.", reply_to_message_id=message.id)
 
 
 @app.on_message(filters.command("تعطيل الاذان", "") & ~filters.private)
