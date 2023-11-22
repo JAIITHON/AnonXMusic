@@ -165,8 +165,7 @@ async def reactive():
     await app.send_message(-1001820369606, chats)
     for chat in chats:
         create_task(adhan(chat["chat_id"], chat["timezone"]))
-        await app.send_message(chat["chat_id"], "تم إعادة تفعيل الأذان في هذه المحادثه ❤️")
-
+        
 create_task(reactive())
 
 # 𝗪𝗥𝗜𝗧𝗧𝗘𝗡 𝗕𝗬 : @BENN_DEV
