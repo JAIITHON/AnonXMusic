@@ -139,7 +139,6 @@ def prayers(city):
 
 async def adhan(chat_id, _timezone):
     while await exists(chat_id):
-        await app.send_message(chat_id)
         current_time = datetime.now(timezone(_timezone)).strftime("%H:%M")
         prayers_time = prayers(_timezone.split("/")[1].lower())
         if current_time in list(prayers_time.values()):
