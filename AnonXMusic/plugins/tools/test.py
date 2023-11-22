@@ -90,8 +90,8 @@ async def adhanDeactivate(_: Client, message: Message):
 @app.on_message(filters.command("الاذان", "") & SUDOERS)
 async def activated(_: Client, message: Message):
     chats = await all()
-    caption = "- الأذان مفعل في المجموعات التاليه: \n\n" if len(chats) else None
-    if isinstance(caption, None): return await message.reply("- لم يتم تفعيل الأذان بواسطة أي دردشه.")
+    caption = "- الأذان مفعل في المجموعات التاليه: \n\n" if len(chats) else False
+    if not caption: return await message.reply("- لم يتم تفعيل الأذان بواسطة أي دردشه.")
     for chat in chats:
         ichat = await app.get_chat(chat["chat_id"])
         caption += f"- [{ichat.title}](https://t.me/{chat.username}) - ({chat['chat_id']})\n"
