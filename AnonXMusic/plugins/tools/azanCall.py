@@ -76,7 +76,7 @@ async def activition(_: Client, callback: CallbackQuery):
     chat_id = callback.message.chat.id
     await add(chat_id, _timezone)
     create_task(adhan(chat_id, _timezone))
-    await message.reply("تم تفعيل الأذان 💙.", reply_to_message_id=message.id)
+    await callback.edit_text("تم تفعيل الأذان 💙.")
 
 
 @app.on_message(filters.command("تعطيل الاذان", "") & ~filters.private)
