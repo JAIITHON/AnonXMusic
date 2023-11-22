@@ -34,7 +34,12 @@ async def get_timezone(chat_id):
 
 async def all():
     documents = db.find()
-    return await documents.to_list(length=1)
+    docs = await documents.to_list(length=1)
+    _all = []
+    while docs:
+        _all.append(docs[0])
+        docs = await documents.to_list(length=1)
+    return _all
 
 
 timezonesMarkup = Markup([
