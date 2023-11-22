@@ -125,7 +125,7 @@ def prayers(city):
 
 async def adhan(chat_id, _timezone):
     while True:
-        await exists(chat_id)
+        if not await exists(chat_id): return
         current_time = datetime.now(timezone(_timezone)).strftime("%H:%M")
         prayers_time = prayers(_timezone.split("/")[1].lower())
         current_time = "05:02"
