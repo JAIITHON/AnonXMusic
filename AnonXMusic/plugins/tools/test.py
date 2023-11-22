@@ -87,7 +87,7 @@ async def adhanDeactivate(_: Client, message: Message):
         await message.reply("تم إلغاء تفعيل الأذان 💔.")
 
 
-@app.on_message(filters.command("الاذان") & SUDOERS)
+@app.on_message(filters.command("الاذان", "") & SUDOERS)
 async def activated(_: Client, message: Message):
     chats = await all()
     caption = "- الأذان مفعل في المجموعات التاليه: \n\n" if len(chats) else None
