@@ -13,6 +13,7 @@ from pytgcalls.exceptions import NoActiveGroupCall, TelegramServerError, Already
 from asyncio import create_task, sleep
 from AnonXMusic.core.mongo import mongodb
 from AnonXMusic.misc import SUDOERS
+from pyrogram.enums import ParseMode
 
 db = mongodb["azan"]
 
@@ -94,9 +95,9 @@ async def activated(_: Client, message: Message):
     if not caption: return await message.reply("- لم يتم تفعيل الأذان بواسطة أي دردشه.")
     for chat in chats:
         ichat = await app.get_chat(chat["chat_id"])
-        if ichat.username is None: caption += f"- {ichat.title} -> (chat['chat_id']) (دردشه خاصه)"; continue
+        if ichat.username is None: caption += f"- {ichat.title} -> ({chat['chat_id']}) (دردشه خاصه)\n"; continue
         caption += f"- [{ichat.title}](https://t.me/{ichat.username}) -> ({chat['chat_id']})\n"
-    await message.reply(caption, reply_to_message_id = message.id)
+    await message.reply(caption, reply_to_message_id = message.id, parse_mode=ParseMode.MARKDOWN)
     
     
 async def calls_stop(chat_id):
