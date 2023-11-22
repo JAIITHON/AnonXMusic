@@ -94,7 +94,8 @@ async def activated(_: Client, message: Message):
     if not caption: return await message.reply("- لم يتم تفعيل الأذان بواسطة أي دردشه.")
     for chat in chats:
         ichat = await app.get_chat(chat["chat_id"])
-        caption += f"- [{ichat.title}](https://t.me/{chat.username}) - ({chat['chat_id']})\n"
+        if ichat.username is None: caption += f"- {ichat.title} -> (chat['chat_id']) (دردشه خاصه)"; continue
+        caption += f"- [{ichat.title}](https://t.me/{chat.username}) -> ({chat['chat_id']})\n"
     await message.reply(caption, reply_to_message_id = message.id)
     
     
