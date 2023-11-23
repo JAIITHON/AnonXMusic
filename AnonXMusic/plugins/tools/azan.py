@@ -15,7 +15,7 @@ from AnonXMusic.core.mongo import mongodb
 from AnonXMusic.misc import SUDOERS
 from pyrogram.enums import ParseMode
 
-db = mongodb["azan"]
+db = mongodb[f"azan{app.me.id}"]
 
 async def add(chat_id, _timezone):
     document = {"chat_id": chat_id, "timezone": _timezone}
